@@ -14,6 +14,7 @@ struct MyPageReducer {
     @ObservableState
     struct State : Equatable {
         var latestStories: IdentifiedArrayOf<StoryModel> = []
+        var completedStories: IdentifiedArrayOf<StoryModel> = []
     }
     
     enum Action {
@@ -48,7 +49,7 @@ struct MyPageReducer {
                 return .run { send in
                     do {
                         let user = try AuthenticationManager.shared.getAuthenticatedUser()
-                        let stories = await FirebaseManager.shared.getMyWritingStories(uid: user.uid).map { $0.toEntity() }
+                        let stories = await FirebaseManager.shared.getMyStories(uid: user.uid).map { $0.toEntity() }
                         await send(.setMyStories(stories: stories))
                     } catch let error {
                         print(" error: \(error)")
@@ -56,11 +57,12 @@ struct MyPageReducer {
                 }
             
             case let .setMyStories(stories):
-                var stories = stories.sorted { $0.modifyDate > $1.modifyDate }
-                if stories.count > 3 {
-                    stories = Array(stories.prefix(3))
-                }
-                state.latestStories = IdentifiedArray(uniqueElements: stories)
+                let stories = stories.sorted { $0.modifyDate > $1.modifyDate }
+                let inCompletedStories = stories.filter { !$0.isCompleted }.prefix(3)
+                let completeStories = stories.filter { $0.isCompleted }.prefix(3)
+             
+                state.latestStories = IdentifiedArray(uniqueElements: inCompletedStories)
+                state.completedStories = IdentifiedArray(uniqueElements: completeStories)
                 return .none
                 
             case .moveToLogin:

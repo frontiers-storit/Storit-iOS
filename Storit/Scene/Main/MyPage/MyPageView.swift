@@ -15,10 +15,11 @@ struct MyPageView: View {
     
     var body: some View {
         WithPerceptionTracking {
-            ScrollView {
+            ScrollView(showsIndicators: false) {
                 VStack(spacing: 20) {
                     userView
                     inCompleteListView
+                    completeListView
                     
                     Button {
                         store.send(.tapLogoutButton)
@@ -53,13 +54,11 @@ struct MyPageView: View {
                 .padding(.horizontal, 16)
                 .background(.stGray1)
                 .cornerRadius(8)
-                
             }
             .padding(.horizontal, 16)
             .padding(.vertical, 16)
             .background(.stBlack)
             .scrollBounceBehavior(.basedOnSize)
-            
         }
         .onAppear {
             store.send(.getMyStories)
@@ -112,7 +111,7 @@ struct MyPageView: View {
         
         VStack(spacing: 18) {
             HStack {
-                Text("작성 중인 소설")
+                Text("작성 중인 스토리")
                     .font(.system(size: 16, weight: .semibold))
                     .foregroundColor(.stYellow)
                 
@@ -121,7 +120,7 @@ struct MyPageView: View {
             
             if store.latestStories.isEmpty {
                 HStack {
-                    Text("아직 작성 중인 소설이 없어요")
+                    Text("작성 중인 스토리가 없어요")
                         .font(.system(size: 14, weight: .regular))
                         .foregroundColor(.stYellow)
                     
@@ -130,6 +129,38 @@ struct MyPageView: View {
             } else {
                 LazyVStack {
                     ForEach(store.latestStories, id: \.self) { storyModel in
+                        StoryComponentView(storyModel: storyModel)
+                            .onTapGesture {
+                                store.send(.tapMyStory(storyModel: storyModel))
+                            }
+                    }
+                }
+            }
+        }
+    }
+    
+    private var completeListView: some View {
+        
+        VStack(spacing: 18) {
+            HStack {
+                Text("작성 완료한 스토리")
+                    .font(.system(size: 16, weight: .semibold))
+                    .foregroundColor(.stYellow)
+                
+                Spacer()
+            }
+            
+            if store.latestStories.isEmpty {
+                HStack {
+                    Text("아직 작성 완료한 스토리가 없어요")
+                        .font(.system(size: 14, weight: .regular))
+                        .foregroundColor(.stYellow)
+                    
+                    Spacer()
+                }
+            } else {
+                LazyVStack {
+                    ForEach(store.completedStories, id: \.self) { storyModel in
                         StoryComponentView(storyModel: storyModel)
                             .onTapGesture {
                                 store.send(.tapMyStory(storyModel: storyModel))

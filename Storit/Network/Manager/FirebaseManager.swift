@@ -29,6 +29,8 @@ class FirebaseManager: NSObject {
 }
 
 extension FirebaseManager {
+    
+    // 메세지 전송
     func sendMessage(storyId: String, uid: String, message: String) async -> Bool {
         
         let timestamp = Date.now.toTimestamp()
@@ -66,6 +68,7 @@ extension FirebaseManager {
         return false
     }
     
+    // 마지막 메세지 전송
     func sendLastMessage(storyId: String, uid: String, message: String) async -> Bool {
         
         let timestamp = Date.now.toTimestamp()
@@ -94,6 +97,7 @@ extension FirebaseManager {
         return false
     }
     
+    // 수정 일 업데이트
     func updateModifyDate(storyId: String, uid: String, timestamp: Int) async -> Bool {
         return await withCheckedContinuation { continuation in
             realtimeDB
@@ -111,8 +115,6 @@ extension FirebaseManager {
                 }
         }
     }
-        
-    
     
 //    func getMessages(storyId: String, uid: String) async -> [ChatMessage] {
 //        return await withCheckedContinuation { continuation in
@@ -135,6 +137,7 @@ extension FirebaseManager {
 //        }
 //    }
     
+    // 메세지들 구독한 채로 가져오기
     func subscribeToMessages(storyId: String, uid: String) -> AsyncStream<[ChatMessage]> {
         AsyncStream { continuation in
             realtimeDB
@@ -163,25 +166,8 @@ extension FirebaseManager {
             }
         }
     }
-
     
-    
-//    func getStories() async -> [StoryDTO] {
-//        return await withCheckedContinuation { continuation in
-//            var stories: [StoryDTO] = []
-//            
-//            realtimeDB
-//                .child(Collection.writedStories)
-//                .observeSingleEvent(of: .value)
-//            { snapshot, _ in
-//                if let snapshotValue = snapshot.value as? [String: Any] {
-//                    stories = self.parseStories(from: snapshotValue)
-//                }
-//                continuation.resume(returning: stories)
-//            }
-//        }
-//    }
-    
+    // 내 스토리
     func getMyStories(uid: String) async -> [StoryDTO] {
         return await withCheckedContinuation { continuation in
             var stories: [StoryDTO] = []
@@ -201,6 +187,7 @@ extension FirebaseManager {
         }
     }
     
+    // 내 작성중 스토리
     func getMyWritingStories(uid: String) async -> [StoryDTO] {
         return await withCheckedContinuation { continuation in            
             realtimeDB
@@ -221,6 +208,7 @@ extension FirebaseManager {
         }
     }
     
+    // 사용자 데이터 삭제 (계정 탈퇴시)
     func deleteUserData(uid: String) async throws {
         return try await withCheckedThrowingContinuation { continuation in
             realtimeDB.child(Collection.users).child(uid).removeValue() { error, _ in
