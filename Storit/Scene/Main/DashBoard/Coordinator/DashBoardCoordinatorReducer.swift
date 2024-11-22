@@ -5,6 +5,7 @@
 //  Created by iOS Nasmedia on 9/26/24.
 //
 
+import Foundation
 import ComposableArchitecture
 import TCACoordinators
 
@@ -35,6 +36,7 @@ struct DashBoardCoordinatorReducer {
                 state.routes.presentCover(.agentSetting(.init()), embedInNavigationView: true)
                 
             case let .router(.routeAction(id: _, action: .agentSetting(.moveToChatView(storyModel)))):
+                state.routes.dismissAll()
                 state.routes.presentCover(.chat(.init(storyModel: storyModel)))
                 
             case .router(.routeAction(id: _, action: .agentSetting(.tapCloseButton))):
@@ -42,6 +44,7 @@ struct DashBoardCoordinatorReducer {
                 
             case .router(.routeAction(id: _, action: .chat(.tapBackButton))):
                 state.routes.dismiss()
+                NotificationCenter.default.post(name: .goToSecondTab, object: nil)
                 
             case .router(.routeAction(id: _, action: .dashBoard(.tapTestAdMixerButton))):
                 state.routes.push(.admixer)

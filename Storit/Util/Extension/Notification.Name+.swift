@@ -9,4 +9,5 @@ import Foundation
 
 extension Notification.Name {
     static let goToLoginScreen = Notification.Name("goToLoginScreen")
+    static let goToSecondTab = Notification.Name("goToSecondTab")
 }
