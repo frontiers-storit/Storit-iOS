@@ -1,0 +1,208 @@
+// swift-interface-format-version: 1.0
+// swift-compiler-version: Apple Swift version 5.10 (swiftlang-5.10.0.13 clang-1500.3.9.4)
+// swift-module-flags: -target arm64-apple-ios12.0 -enable-objc-interop -enable-library-evolution -swift-version 5 -enforce-exclusivity=checked -O -enable-bare-slash-regex -module-name AdMixerMediation
+import AdMixer
+@_exported import AdMixerMediation
+import AdSupport
+import AppTrackingTransparency
+import CoreTelephony
+import Foundation
+import GoogleMobileAds
+import Network
+import Swift
+import UIKit
+import UniformTypeIdentifiers
+import _Concurrency
+import _StringProcessing
+import _SwiftConcurrencyShims
+import os.log
+import os
+@objc @_Concurrency.MainActor(unsafe) open class AMMBannerView : UIKit.UIView {
+  @_Concurrency.MainActor(unsafe) open var adUnitID: Swift.Int
+  @_Concurrency.MainActor(unsafe) open var delegate: (any AdMixerMediation.AMMBannerViewDelegate)?
+  @_Concurrency.MainActor(unsafe) required public init(width: Swift.Double)
+  @_Concurrency.MainActor(unsafe) @objc required dynamic public init?(coder: Foundation.NSCoder)
+  @_Concurrency.MainActor(unsafe) public func load()
+  @_Concurrency.MainActor(unsafe) @objc override dynamic open func willMove(toWindow newWindow: UIKit.UIWindow?)
+  @objc deinit
+}
+extension AdMixerMediation.AMMBannerView : AdMixer.AMBannerAdDelegate {
+  @_Concurrency.MainActor(unsafe) @objc dynamic public func didLoadBannerAdSuccess()
+  @_Concurrency.MainActor(unsafe) @objc dynamic public func didLoadBannerAdFail(with error: (any Swift.Error)?)
+  @_Concurrency.MainActor(unsafe) @objc dynamic public func didTapBannerAd()
+}
+extension AdMixerMediation.AMMBannerView : GoogleMobileAds.GADBannerViewDelegate {
+  @_Concurrency.MainActor(unsafe) @objc dynamic public func bannerViewDidReceiveAd(_ bannerView: GoogleMobileAds.GADBannerView)
+  @_Concurrency.MainActor(unsafe) @objc dynamic public func bannerView(_ bannerView: GoogleMobileAds.GADBannerView, didFailToReceiveAdWithError error: any Swift.Error)
+  @_Concurrency.MainActor(unsafe) @objc dynamic public func bannerViewDidRecordClick(_ bannerView: GoogleMobileAds.GADBannerView)
+  @_Concurrency.MainActor(unsafe) @objc dynamic public func bannerViewDidRecordImpression(_ bannerView: GoogleMobileAds.GADBannerView)
+  @_Concurrency.MainActor(unsafe) @objc dynamic public func bannerViewWillPresentScreen(_ bannerView: GoogleMobileAds.GADBannerView)
+  @_Concurrency.MainActor(unsafe) @objc dynamic public func bannerViewWillDismissScreen(_ bannerView: GoogleMobileAds.GADBannerView)
+  @_Concurrency.MainActor(unsafe) @objc dynamic public func bannerViewDidDismissScreen(_ bannerView: GoogleMobileAds.GADBannerView)
+}
+@objc @_Concurrency.MainActor(unsafe) open class AMMVideoView : UIKit.UIView {
+  @_Concurrency.MainActor(unsafe) open var adUnitID: Swift.Int
+  @_Concurrency.MainActor(unsafe) open var delegate: (any AdMixerMediation.AMMVideoViewDelegate)?
+  @_Concurrency.MainActor(unsafe) open var viewController: UIKit.UIViewController!
+  @_Concurrency.MainActor(unsafe) open var customParam: [Swift.String : Swift.String]?
+  @_Concurrency.MainActor(unsafe) @objc dynamic public init()
+  @_Concurrency.MainActor(unsafe) @objc required dynamic public init?(coder: Foundation.NSCoder)
+  @_Concurrency.MainActor(unsafe) open func load()
+  @objc deinit
+}
+extension AdMixerMediation.AMMVideoView : AdMixer.AMVideoAdDelegate {
+  @_Concurrency.MainActor(unsafe) @objc dynamic public func didLoadAdSuccess()
+  @_Concurrency.MainActor(unsafe) @objc dynamic public func didLoadAdFail(with error: (any Swift.Error)?)
+  @_Concurrency.MainActor(unsafe) @objc dynamic public func didShowAdSuccess()
+  @_Concurrency.MainActor(unsafe) @objc dynamic public func didSkipAd()
+  @_Concurrency.MainActor(unsafe) @objc dynamic public func didTapAdViewMore()
+}
+@objc public protocol AMMBannerViewDelegate {
+  @objc func onSuccessBanner()
+  @objc func onFailBanner()
+}
+@_inheritsConvenienceInitializers @objc open class AMMediation : ObjectiveC.NSObject {
+  @objc public static let shared: AdMixerMediation.AMMediation
+  @objc public func setDebugEnabled(isEnabled: Swift.Bool)
+  @objc public func initialize(mediaKey: Swift.Int, adunitID: Swift.Set<Swift.Int>)
+  @objc public func set(isEnabled: Swift.Bool)
+  @objc override dynamic public init()
+  @objc deinit
+}
+@_inheritsConvenienceInitializers @objc open class AMMediationSDK : ObjectiveC.NSObject {
+  public static let shared: AdMixerMediation.AMMediationSDK
+  public var hostUrl: Swift.String?
+  @objc override dynamic public init()
+  @objc deinit
+}
+@objc @_inheritsConvenienceInitializers public class AMMInterstitial : ObjectiveC.NSObject {
+  open var adUnitID: Swift.Int
+  open var delegate: (any AdMixerMediation.AMMInterstitialDelegate)?
+  open var viewController: UIKit.UIViewController!
+  open var viewType: AdMixer.AMFullBannerType
+  open func load()
+  @objc override dynamic public init()
+  @objc deinit
+}
+extension AdMixerMediation.AMMInterstitial : AdMixer.AMBannerAdDelegate {
+  @objc dynamic public func didLoadFullBannerAdSuccess()
+  @objc dynamic public func didLoadFullBannerAdFail(with error: (any Swift.Error)?)
+  @objc dynamic public func didFullBannerAdDismiss()
+  @objc dynamic public func didTapFullBannerAd()
+}
+extension AdMixerMediation.AMMInterstitial : GoogleMobileAds.GADFullScreenContentDelegate {
+  @objc dynamic public func ad(_ ad: any GoogleMobileAds.GADFullScreenPresentingAd, didFailToPresentFullScreenContentWithError error: any Swift.Error)
+  @objc dynamic public func adWillPresentFullScreenContent(_ ad: any GoogleMobileAds.GADFullScreenPresentingAd)
+  @objc dynamic public func adDidDismissFullScreenContent(_ ad: any GoogleMobileAds.GADFullScreenPresentingAd)
+  @objc dynamic public func adDidRecordClick(_ ad: any GoogleMobileAds.GADFullScreenPresentingAd)
+}
+@objc public protocol AMMInterstitialDelegate {
+  @objc func onSuccessInterstitial()
+  @objc func onFailInterstitial()
+}
+@objc @_hasMissingDesignatedInitializers @objcMembers public class AMMNative : ObjectiveC.NSObject {
+  @objc final public let icon: Foundation.URL
+  @objc final public let title: Swift.String
+  @objc final public let image: Swift.String?
+  @objc final public let video: Swift.String?
+  @objc final public let mGADMediaContent: GoogleMobileAds.GADMediaContent?
+  @objc final public let advertiser: Swift.String
+  @objc final public let descriptionText: Swift.String
+  @objc final public let cta: Swift.String
+  @objc deinit
+}
+@objc @_hasMissingDesignatedInitializers @_Concurrency.MainActor(unsafe) public class AMMNativeAdView : UIKit.UIView {
+  @_Concurrency.MainActor(unsafe) open var adUnitID: Swift.Int
+  @_Concurrency.MainActor(unsafe) open var delegate: (any AdMixerMediation.AMMNativeDelegate)?
+  @_Concurrency.MainActor(unsafe) open var viewController: UIKit.UIViewController!
+  @IBOutlet @objc @_Concurrency.MainActor(unsafe) weak public var iv_icon: UIKit.UIImageView!
+  @IBOutlet @objc @_Concurrency.MainActor(unsafe) weak public var l_headline: UIKit.UILabel!
+  @IBOutlet @objc @_Concurrency.MainActor(unsafe) weak public var l_advertiser: UIKit.UILabel!
+  @IBOutlet @objc @_Concurrency.MainActor(unsafe) weak public var l_description: UIKit.UILabel!
+  @IBOutlet @objc @_Concurrency.MainActor(unsafe) weak public var media: UIKit.UIView!
+  @IBOutlet @objc @_Concurrency.MainActor(unsafe) weak public var b_cta: UIKit.UIButton!
+  @_Concurrency.MainActor(unsafe) @objc dynamic public init()
+  @objc deinit
+}
+@objc @_hasMissingDesignatedInitializers @_Concurrency.MainActor(unsafe) public class AMMNativeAdViewContainer : UIKit.UIView {
+  @_Concurrency.MainActor(unsafe) open var adUnitID: Swift.Int
+  @_Concurrency.MainActor(unsafe) open var delegate: (any AdMixerMediation.AMMNativeDelegate)?
+  @_Concurrency.MainActor(unsafe) open var viewController: UIKit.UIViewController!
+  @_Concurrency.MainActor(unsafe) open var nativeAdView: AdMixerMediation.AMMNativeAdView!
+  @_Concurrency.MainActor(unsafe) @objc dynamic public init()
+  @_Concurrency.MainActor(unsafe) public func load()
+  @_Concurrency.MainActor(unsafe) @objc override dynamic open func willMove(toWindow newWindow: UIKit.UIWindow?)
+  @objc deinit
+}
+extension AdMixerMediation.AMMNativeAdViewContainer : AdMixer.AMNativeAdDelegate {
+  @_Concurrency.MainActor(unsafe) @objc dynamic public func didLoadNativeAdSuccess(amNative: AdMixer.AMNative)
+  @_Concurrency.MainActor(unsafe) @objc dynamic public func didLoadNativeAdFail(with error: (any Swift.Error)?)
+}
+extension AdMixerMediation.AMMNativeAdViewContainer : GoogleMobileAds.GADNativeAdLoaderDelegate {
+  @_Concurrency.MainActor(unsafe) @objc dynamic public func adLoader(_ adLoader: GoogleMobileAds.GADAdLoader, didReceive nativeAd: GoogleMobileAds.GADNativeAd)
+  @_Concurrency.MainActor(unsafe) @objc dynamic public func adLoader(_ adLoader: GoogleMobileAds.GADAdLoader, didFailToReceiveAdWithError error: any Swift.Error)
+}
+extension AdMixerMediation.AMMNativeAdViewContainer : GoogleMobileAds.GADVideoControllerDelegate {
+  @_Concurrency.MainActor(unsafe) @objc dynamic public func videoControllerDidEndVideoPlayback(_ videoController: GoogleMobileAds.GADVideoController)
+}
+@objc public protocol AMMNativeDelegate {
+  @objc func onSuccessNative()
+  @objc func onFailNative()
+}
+@objc @_inheritsConvenienceInitializers open class AMMRewardVideo : ObjectiveC.NSObject {
+  open var adUnitID: Swift.Int
+  open var delegate: (any AdMixerMediation.AMMRewardVideoDelegate)?
+  open var viewController: UIKit.UIViewController!
+  open var customParam: [Swift.String : Swift.String]?
+  open func load()
+  @objc override dynamic public init()
+  @objc deinit
+}
+extension AdMixerMediation.AMMRewardVideo : AdMixer.AMVideoAdDelegate {
+  @objc dynamic public func didLoadRewardAdSuccess()
+  @objc dynamic public func didLoadRewardAdFail(with error: (any Swift.Error)?)
+  @objc dynamic public func didShowRewardAdSuccess()
+  @objc dynamic public func didCloseRewardAd()
+  @objc dynamic public func didTapRewardAdViewMore()
+  @objc dynamic public func didRewardVideoComplete()
+}
+extension AdMixerMediation.AMMRewardVideo : GoogleMobileAds.GADFullScreenContentDelegate {
+  @objc dynamic public func ad(_ ad: any GoogleMobileAds.GADFullScreenPresentingAd, didFailToPresentFullScreenContentWithError error: any Swift.Error)
+  @objc dynamic public func adWillPresentFullScreenContent(_ ad: any GoogleMobileAds.GADFullScreenPresentingAd)
+  @objc dynamic public func adDidDismissFullScreenContent(_ ad: any GoogleMobileAds.GADFullScreenPresentingAd)
+  @objc dynamic public func adDidRecordClick(_ ad: any GoogleMobileAds.GADFullScreenPresentingAd)
+}
+@objc public protocol AMMRewardVideoDelegate {
+  @objc func onSuccessRewardVideo()
+  @objc func onFailRewardVideo()
+  @objc func onCloseRewardVideo()
+  @objc func onTapRewardVideo()
+  @objc func onRewardVideoComplete()
+}
+@objc @_inheritsConvenienceInitializers public class AMMVideoInterstitial : ObjectiveC.NSObject {
+  open var adUnitID: Swift.Int
+  open var delegate: (any AdMixerMediation.AMMVideoInterstitialDelegate)?
+  open var viewController: UIKit.UIViewController!
+  open func load()
+  @objc override dynamic public init()
+  @objc deinit
+}
+extension AdMixerMediation.AMMVideoInterstitial : AdMixer.AMVideoAdDelegate {
+  @objc dynamic public func didLoadFullAdSuccess()
+  @objc dynamic public func didLoadFullAdFail(with error: (any Swift.Error)?)
+  @objc dynamic public func didShowFullAdSuccess()
+  @objc dynamic public func didCloseFullAd()
+  @objc dynamic public func didTapFullAdViewMore()
+}
+@objc public protocol AMMVideoViewDelegate {
+  @objc func onSuccessVideo()
+  @objc func onFailVideo()
+  @objc func onSkipVideo()
+  @objc func onTapVideoViewMore()
+}
+@objc public protocol AMMVideoInterstitialDelegate {
+  @objc func onSuccessVideoInterstitial()
+  @objc func onFailVideoInterstitial()
+  @objc func onCloseVideoInterstitial()
+  @objc func onTapVideoInterstitialViewMore()
+}
