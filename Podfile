@@ -8,5 +8,6 @@ target 'Storit' do
   # Pods for Storit
   pod 'AdMixerMediation', '0.3.5'
   pod 'FBAudienceNetwork'
+  pod 'Kingfisher', '~> 8.0'
 
 end

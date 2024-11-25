@@ -45,7 +45,8 @@ struct ChatListCoordinatorReducer {
                     likes: 0,
                     createDate: storyModel.createDate.toTimestamp(),
                     userId: storyModel.userId,
-                    userName: storyModel.userName)
+                    userName: storyModel.userName,
+                    thumbnail: storyModel.thumbnail ?? "")
                 
                 state.routes.push(.storyDetail(.init(storyDetailModel: boardModel, isPublic: storyModel.isOnBoards)))
 

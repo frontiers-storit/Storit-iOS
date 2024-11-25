@@ -42,7 +42,8 @@ struct AgentSettingReducer {
                                             storyId: "",
                                             title: "",
                                             userId: "",
-                                            userName: AppData.nickname)
+                                            userName: AppData.nickname,
+                                            thumbnail: nil)
                 
                 return .run { send in
                     if let result = await storyClient.createStory(req) {

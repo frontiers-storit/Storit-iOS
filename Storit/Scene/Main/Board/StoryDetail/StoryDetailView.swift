@@ -8,6 +8,7 @@
 import SwiftUI
 import ComposableArchitecture
 import AlertToast
+import Kingfisher
 
 struct StoryDetailView: View {
     let store: StoreOf<StoryDetailReducer>
@@ -26,12 +27,9 @@ struct StoryDetailView: View {
                     let size = $0.size
                     
                     HStack(spacing: 10) {
-                        Image(.icTestBookCover)
-                            .resizable()
-                            .aspectRatio(contentMode: .fill)
+        
+                        BookImageView()
                             .frame(width: size.height, height: size.height)
-                            .clipShape(CustomCorners(corners: [.topRight, .bottomRight], radius: 20))
-                            .shadow(color: .white.opacity(0.5), radius: 10, x: 0, y: 0)
                         
                         VStack(alignment: .leading, spacing: 8) {
                             Text(store.storyDetailModel.title)
@@ -95,6 +93,21 @@ struct StoryDetailView: View {
             
         }
         .padding(.horizontal, 16)
+    }
+    
+        
+    @ViewBuilder
+    func BookImageView() -> some View {
+        KFImage(URL(string: store.storyDetailModel.thumbnail))
+            .placeholder {
+                ProgressView()
+            }
+            .retry(maxCount: 2, interval: .seconds(2)) //재시도
+            .onFailureImage(.icMascot)
+            .resizable()
+            .aspectRatio(contentMode: .fill)
+            .clipShape(CustomCorners(corners: [.topRight, .bottomRight], radius: 20))
+            .shadow(color: .white.opacity(0.5), radius: 10, x: 0, y: 0)
     }
     
     @ViewBuilder

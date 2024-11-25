@@ -8,6 +8,7 @@
 import SwiftUI
 import Foundation
 import ComposableArchitecture
+import Kingfisher
 
 struct BoardView: View {
     var store : StoreOf<BoardReducer>
@@ -155,7 +156,12 @@ struct BoardView: View {
                 
                 // Book cover image
                 ZStack {
-                    Image(.icTestBookCover)
+                    KFImage(URL(string: book.thumbnail))
+                        .placeholder {
+                            ProgressView()
+                        }
+                        .retry(maxCount: 2, interval: .seconds(2)) //재시도
+                        .onFailureImage(.icMascot)
                         .resizable()
                         .aspectRatio(contentMode: .fill)
                         .frame(width: size.width / 2, height: size.height)

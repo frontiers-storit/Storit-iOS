@@ -7,10 +7,12 @@ PODS:
   - Google-Mobile-Ads-SDK (11.10.0):
     - GoogleUserMessagingPlatform (>= 1.1)
   - GoogleUserMessagingPlatform (2.7.0)
+  - Kingfisher (8.1.1)
 
 DEPENDENCIES:
   - AdMixerMediation (= 0.3.5)
   - FBAudienceNetwork
+  - Kingfisher (~> 8.0)
 
 SPEC REPOS:
   trunk:
@@ -19,6 +21,7 @@ SPEC REPOS:
     - FBAudienceNetwork
     - Google-Mobile-Ads-SDK
     - GoogleUserMessagingPlatform
+    - Kingfisher
 
 SPEC CHECKSUMS:
   AdMixer: 0b09b99e6e6d6e85e30c36ce9d1421bd59261f6f
@@ -26,7 +29,8 @@ SPEC CHECKSUMS:
   FBAudienceNetwork: d1670939884e3a2e0ad98dca98d7e0c841417228
   Google-Mobile-Ads-SDK: 13e6e98edfd78ad8d8a791edb927658cc260a56f
   GoogleUserMessagingPlatform: a8b56893477f67212fbc8411c139e61d463349f5
+  Kingfisher: fc2788e497306f97fdef6e4df49f02106cb57788
 
-PODFILE CHECKSUM: e8bf6c4a75b08aa088e551d6a8447e423045482e
+PODFILE CHECKSUM: 120015d7a9e185cbc73b4bdb6f1960d7510d0fa9
 
 COCOAPODS: 1.16.2

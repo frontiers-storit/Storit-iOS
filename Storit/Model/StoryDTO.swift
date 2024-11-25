@@ -20,6 +20,7 @@ struct StoryDTO: Decodable, Equatable {
     let title: String?
     let userId: String
     let userName: String?
+    let thumbnail: String?
 }
 
 extension StoryDTO {
@@ -36,7 +37,8 @@ extension StoryDTO {
                           storyId: storyId,
                           title: title ?? "",
                           userId: userId,
-                          userName: userName)
+                          userName: userName,
+                          thumbnail: thumbnail)
     }
 }
 
@@ -54,6 +56,7 @@ struct StoryModel: Identifiable, Equatable, Hashable {
     let title: String
     let userId: String
     let userName: String?
+    let thumbnail: String?
 }
 
 

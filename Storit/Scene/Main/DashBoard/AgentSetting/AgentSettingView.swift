@@ -33,9 +33,21 @@ struct AgentSettingView: View {
                     }
                     .padding(.bottom, 20)
                     
-                    Image(.icAgent)
+                    Image(.icNoTextLogo)
                         .resizable()
                         .frame(width: 60, height: 60)
+                        .background(.black)
+                        .cornerRadius(30)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 30)
+                                .stroke(Color.stYellow, lineWidth: 2)
+                                .shadow(
+                                    color: .white.opacity(0.8),
+                                    radius: CGFloat(5),
+                                    x: CGFloat(0),
+                                    y: CGFloat(0)
+                                )
+                        )
                         .padding(.bottom, 20)
                     
                     Text("에이전트 설정")

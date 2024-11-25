@@ -27,6 +27,7 @@ struct BoardDTO: Decodable, Equatable, Identifiable {
     let createDate: Int
     let userId: String
     let userName: String?
+    let thumbnail: String
 }
 
 extension BoardDTO {
