@@ -17,7 +17,7 @@ struct BoardCoordinatorView: View {
             TCARouter(store.scope(state: \.routes, action: \.router)) { screen in
                 switch screen.case {
                 case let .board(store):
-                    BoardView(store: store, selectedBook: nil)
+                    BoardView(store: store)
                 case let .storyDetail(store):
                     StoryDetailView(store: store)
                 }

@@ -13,61 +13,52 @@ struct BoardView: View {
     var store : StoreOf<BoardReducer>
     
     @State private var sortOption: SortOption = .date
-    private let thresholdOffset: CGFloat = 750.0
+    @State private var showLoadingIndicator: Bool = false
     
-    @Namespace private var animation
-    @State private var showDetailView: Bool = false
-    @State var selectedBook: BoardDTO? = nil
-    @State private var animateCurrentBook: Bool = false
+    private let thresholdOffset: CGFloat = 750.0
 
     var body: some View {
         WithPerceptionTracking {
-            VStack(spacing: 20) {
-                TitleView(title: "커뮤니티")
-                    .padding(.horizontal, 16)
+            ZStack(alignment: .center) {
                 
-                DropdownMenuDisclosureGroup(selectedOption: $sortOption)
-                    .padding(.horizontal, 16)
-              
-                if !store.boardItems.isEmpty {
-                    newBookView()
-                } else {
-                    Spacer()
+                VStack(spacing: 20) {
+                    TitleView(title: "커뮤니티")
+                        .padding(.horizontal, 16)
                     
-                    Text("아직 게시된 스토리가 없어요 \n 스토리를 게시해 볼까요?")
-                        .font(.system(size: 18, weight: .semibold))
-                        .foregroundColor(.stYellow)
+                    DropdownMenuDisclosureGroup(selectedOption: $sortOption)
+                        .padding(.horizontal, 16)
                     
-                    Spacer()
-                }
-            }
-            .padding(.vertical, 16)
-            .background(.stBlack)
-            .onAppear {
-                store.send(.getInitialBoards)
-            }
-            .onChange(of: sortOption) { _ in
-                store.send(.changeSortOption(sortOption))
-            }
-            .overlay {
-                if let selectedBook, showDetailView {
-                    BookDetailView(show: $showDetailView,
-                                   animation: animation,
-                                   book: selectedBook)
-                    .transition(.asymmetric(insertion: .identity, removal: .offset(y: 5)))
-                }
-            }
-            .onChange(of: showDetailView) { newValue in
-                if !newValue {
-                    withAnimation(.easeInOut(duration: 0.15).delay(0.3)) {
-                        animateCurrentBook = false
+                    if !store.boardItems.isEmpty {
+                        BookCardsView()
+                    } else {
+                        Spacer()
+                        
+                        Text("아직 게시된 스토리가 없어요 \n 스토리를 게시해 볼까요?")
+                            .font(.system(size: 18, weight: .semibold))
+                            .foregroundColor(.stYellow)
+                        
+                        Spacer()
                     }
                 }
+                .padding(.vertical, 16)
+                
+                LoadingIndicatorView(isVisible: $showLoadingIndicator)
             }
+        }
+        .background(.stBlack)
+        .onAppear {
+            store.send(.getInitialBoards)
+        }
+        .onChange(of: sortOption) { _ in
+            store.send(.changeSortOption(sortOption))
+        }
+        .onChange(of: store.state.isLoading) { isLoading in
+            showLoadingIndicator = isLoading
         }
     }
     
-    private func newBookView() -> some View {
+    @ViewBuilder
+    private func BookCardsView() -> some View {
         GeometryReader {
             let size = $0.size
                         
@@ -164,14 +155,12 @@ struct BoardView: View {
                 
                 // Book cover image
                 ZStack {
-                    if !(showDetailView) {
-                        Image(.icTestBookCover)
-                            .resizable()
-                            .aspectRatio(contentMode: .fill)
-                            .frame(width: size.width / 2, height: size.height)
-                            .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
-                            .shadow(color: .white.opacity(0.5), radius: 10, x: 0, y: 0)
-                    }
+                    Image(.icTestBookCover)
+                        .resizable()
+                        .aspectRatio(contentMode: .fill)
+                        .frame(width: size.width / 2, height: size.height)
+                        .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+                        .shadow(color: .white.opacity(0.5), radius: 10, x: 0, y: 0)
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
             }

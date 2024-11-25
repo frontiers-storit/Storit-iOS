@@ -41,14 +41,11 @@ struct ChatListView: View {
                                 }
                             }
                             .padding(.horizontal, 16)
+                            .padding(.top, 5)
                         }
-                        .padding(.top, 5)
                     }
                 }
-                
-                if showLoadingIndicator {
-                    LoadingView()
-                }
+                LoadingIndicatorView(isVisible: $showLoadingIndicator)
             }
         }
         .background(.stBlack)
@@ -97,19 +94,19 @@ struct ChatListView: View {
         )
     }
     
-    @ViewBuilder
-    func LoadingView() -> some View {
-        Color.black.opacity(0.5)
-            .ignoresSafeArea()
-            .overlay(
-                ActivityIndicatorView(
-                    isVisible: $showLoadingIndicator,
-                    type: .rotatingDots(count: 5) //.scalingDots(count: 4, inset: 4)
-                )
-                .frame(width: 50.0, height: 50.0)
-                .foregroundColor(Color.stYellow)
-            )
-    }
+//    @ViewBuilder
+//    func LoadingView() -> some View {
+//        Color.black.opacity(0.5)
+//            .ignoresSafeArea()
+//            .overlay(
+//                ActivityIndicatorView(
+//                    isVisible: $showLoadingIndicator,
+//                    type: .rotatingDots(count: 5) //.scalingDots(count: 4, inset: 4)
+//                )
+//                .frame(width: 50.0, height: 50.0)
+//                .foregroundColor(Color.stYellow)
+//            )
+//    }
 }
 
 #Preview {
