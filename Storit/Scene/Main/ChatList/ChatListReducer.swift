@@ -14,6 +14,7 @@ struct ChatListReducer {
     @ObservableState
     struct State : Equatable {
         var chatItems: IdentifiedArrayOf<ChatItemReducer.State> = []
+        var isLoading: Bool = false
     }
     
     enum Action {
@@ -40,6 +41,8 @@ struct ChatListReducer {
                 return .none
             
             case .getMyStories:
+                state.isLoading = true
+                
                 return .run { send in
                     do {
                         let user = try AuthenticationManager.shared.getAuthenticatedUser()
@@ -47,6 +50,7 @@ struct ChatListReducer {
                         await send(.setStories(stories: stories))
                     } catch let error {
                         print("getMyStories error: \(error)")
+                        await send(.setStories(stories: []))
                     }
                 }
             
@@ -58,11 +62,13 @@ struct ChatListReducer {
                     }
                 
                 state.chatItems = IdentifiedArray(uniqueElements: storyItems)
+                state.isLoading = false
                 return .none
             
             case let .deleteStory(storyId):
+                state.isLoading = true
                 return .run { send in
-                    if let result = await storyClient.deleteStory(storyId) {
+                    if let _ = await storyClient.deleteStory(storyId) {
                         await send(.getMyStories)
                     }
                 }
