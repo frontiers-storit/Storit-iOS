@@ -23,8 +23,8 @@ struct DashBoardView: View {
                     
                     Image(.icNoTextLogo)
                         .resizable()
-                        .frame(width: 40, height: 40)
-                        .padding(.bottom, 8)
+                        .frame(width: 60, height: 60)
+                        .padding(.bottom, 5)
                     
                     Spacer()
                 }
@@ -61,8 +61,6 @@ struct DashBoardView: View {
                         }
                                                 
                         bannerView()
-                        
-                        Spacer()
                     }
                     .padding(.horizontal, 16)
                 }
@@ -79,7 +77,7 @@ struct DashBoardView: View {
             MotionDetectingView {
                 // 모션 이벤트가 발생했을 때 버튼 표시
                 withAnimation {
-                    isAdmixerButtonVisible = true
+                    isAdmixerButtonVisible.toggle()
                 }
             }
             .allowsHitTesting(false)
@@ -111,7 +109,7 @@ struct DashBoardView: View {
                 maxValues: maxValues,
                 shapeColor: shapeColor
             )
-            .frame(height: 170)
+            .frame(height: 160)
             
             Spacer()
         }

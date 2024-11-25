@@ -47,8 +47,6 @@ struct MyPageView: View {
                             secondaryButton: .default(Text("취소"))
                         )
                     }
-
-                    Spacer()
                 }
                 .padding(.vertical, 16)
                 .padding(.horizontal, 16)

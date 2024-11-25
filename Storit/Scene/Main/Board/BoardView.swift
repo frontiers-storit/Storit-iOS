@@ -30,32 +30,6 @@ struct BoardView: View {
                     .padding(.horizontal, 16)
               
                 if !store.boardItems.isEmpty {
-//                        ScrollView(showsIndicators: false) {
-//                            LazyVStack {
-//                                ForEach(
-//                                    store.scope(state: \.boardItems, action: \.boardItems)
-//                                ) { item in
-//                                    BoardItemView(store: item)
-//                                        .padding(.bottom, 10)
-//                                        .onTapGesture {
-//                                            store.send(.tapStoryItem(item.boardModel))
-//                                        }
-//                                }
-//                            }
-//                            .background(
-//                                GeometryReader { geo -> Color in
-//                                    let maxoffset = geo.frame(in: .global).maxY
-//                                    
-//                                    DispatchQueue.main.async {
-//                                        if maxoffset < thresholdOffset {
-//                                            store.send(.loadNextPage)
-//                                        }
-//                                    }
-//                                    
-//                                    return Color.clear
-//                                }
-//                            )
-//                        }
                     newBookView()
                 } else {
                     Spacer()
@@ -149,14 +123,21 @@ struct BoardView: View {
                     HStack {
                         Text("By \(book.userName ?? "")")
                             .font(.caption)
+                            .fontWeight(.semibold)
                             .foregroundColor(.gray)
                         
                         Spacer()
                         
-                        Text("좋아요: \(book.likes)")
-                            .font(.caption)
-                            .fontWeight(.semibold)
-                            .foregroundColor(.gray)
+                        HStack(spacing: 5) {
+                            Image(systemName: "hand.thumbsup")
+                                .resizable()
+                                .frame(width: 12, height: 12)
+                                .foregroundColor(.gray)
+                            
+                            Text(String(book.likes))
+                                .font(.caption)
+                                .foregroundColor(.gray)
+                        }
                     }
                     
                     HStack {
@@ -184,13 +165,12 @@ struct BoardView: View {
                 // Book cover image
                 ZStack {
                     if !(showDetailView) {
-                        Image(.icMascot)
+                        Image(.icTestBookCover)
                             .resizable()
                             .aspectRatio(contentMode: .fill)
                             .frame(width: size.width / 2, height: size.height)
                             .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
                             .shadow(color: .white.opacity(0.5), radius: 10, x: 0, y: 0)
-//                            .shadow(color: .white.opacity(0.2), radius: 3, x: -5, y: -5)
                     }
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -204,7 +184,7 @@ struct BoardView: View {
                               perspective: 0.8
             )
         }
-        .frame(height: 200)
+        .frame(height: 180)
     }
     
     func convertOffsetToRotation(_ rect: CGRect) -> Double {

@@ -18,22 +18,48 @@ struct StoryDetailView: View {
     
     var body: some View {
         WithPerceptionTracking {
-            VStack {
+            VStack(spacing: 15) {
                 navigationBar()
                     .frame(height: 48)
                 
-                storyContentView()
-                    .padding(.vertical, 16)
-                    .padding(.horizontal, 16)
-                    .background(.stGray1)
-                    .cornerRadius(8)
-                    .padding(.horizontal, 16)
+                GeometryReader {
+                    let size = $0.size
                     
-                Spacer()
+                    HStack(spacing: 10) {
+                        Image(.icTestBookCover)
+                            .resizable()
+                            .aspectRatio(contentMode: .fill)
+                            .frame(width: size.height, height: size.height)
+                            .clipShape(CustomCorners(corners: [.topRight, .bottomRight], radius: 20))
+                            .shadow(color: .white.opacity(0.5), radius: 10, x: 0, y: 0)
+                        
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text(store.storyDetailModel.title)
+                                .font(.title2)
+                                .fontWeight(.semibold)
+                                .foregroundColor(.stYellow)
+                            
+                            if let userName = store.storyDetailModel.userName {
+                                Text("By \(userName)")
+                                    .font(.footnote)
+                                    .fontWeight(.semibold)
+                                    .foregroundColor(.gray)
+                            }
+                            
+                            Text(store.storyDetailModel.createDate.timestamptoDate().formatTo())
+                                .font(.caption)
+                                .foregroundColor(.gray)
+                        }
+                        .padding(.horizontal, 10)
+                    }
+                }
+                .frame(height: 150)
+
+                StoryDetails()
             }
             .navigationBarBackButtonHidden()
             .toolbar(.hidden, for: .tabBar)
-            .padding(.bottom, 16)
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
             .background(.stBlack)
             .background(
                 ActivityView(isPresented: $isShowingActivityView, activityItems: ["https://storit-web-909260373550.asia-northeast3.run.app/post/\(store.storyDetailModel.boardId)"])
@@ -71,116 +97,101 @@ struct StoryDetailView: View {
         .padding(.horizontal, 16)
     }
     
-    private func storyContentView() -> some View {
+    @ViewBuilder
+    func StoryDetails() -> some View {
         VStack(spacing: 0) {
-            HStack(spacing: 0) {
-                Text(store.storyDetailModel.title)
-                    .font(.system(size: 18, weight: .semibold))
-                    .foregroundColor(.stYellow)
-                
-                Spacer()
-            }
-            .padding(.bottom, 20)
+            ButtonView()
             
+            Divider()
+                .padding(.top, 15)
             
-            HStack(spacing: 0) {
-                if let userName = store.storyDetailModel.userName {
-                    Text("작가 : \(userName)")
-                        .font(.caption)
-                        .foregroundColor(.stYellow)
-                }
-                
-                Spacer()
-                
-                Text("게시일 : \(store.storyDetailModel.createDate.timestamptoDate().formatTo())")
-                    .font(.caption)
-                    .foregroundColor(.stYellow)
-            }
-            .padding(.bottom, 17)
-            
-            if #available(iOS 16.4, *) {
-                ScrollView(showsIndicators: false) {
+            ScrollView(.vertical, showsIndicators: false) {
+                VStack(spacing: 15) {
                     Text(store.storyDetailModel.content)
-                        .font(.caption)
-                        .foregroundColor(.stYellow)
+                        .font(.callout)
+                        .foregroundColor(.gray)
                 }
-                .padding(.bottom, 20)
-                .scrollBounceBehavior(.basedOnSize)
-            } else {
-                ScrollView(showsIndicators: false) {
-                    Text(store.storyDetailModel.content)
-                        .font(.caption)
-                        .foregroundColor(.stYellow)
-                }
-                .padding(.bottom, 20)
+                .padding(.bottom, 15)
+                .padding(.top, 10)
             }
-            
-            if store.isPublic {
-                if store.storyDetailModel.userId != AuthenticationManager.shared.currentUser()?.uid {
-                    HStack {
-                        button(
-                            title: "👍🏻 좋아요 \(store.storyDetailModel.likes)",
-                            action: { store.send(.tapLikeButton)}
-                        )
-                        
-                        button(
-                            title: "🔗 공유하기",
-                            action: { isShowingActivityView = true }
-                        )
-                        
-                        button(
-                            title: "🚨 신고하기",
-                            action: { showReportAlert.toggle() }
-                        )
-                        .alert(isPresented: $showReportAlert) {
-                            Alert(
-                                title: Text("신고하기"),
-                                message: Text("이 스토리를 신고하시겠어요? \n신고시 이 스토리를 더 이상 볼 수 없어요."),
-                                primaryButton: .destructive(
-                                    Text("신고"),
-                                    action : {
-                                        store.send(.reportStory)
-                                    }
-                                ),
-                                secondaryButton: .default(Text("취소"))
-                            )
-                        }
+            .scrollBounceBehavior(.basedOnSize)
+        }
+        .padding([.horizontal, .top], 10)
+    }
+    
+    @ViewBuilder
+    func ButtonView() -> some View {
+        if store.isPublic {
+            if store.storyDetailModel.userId != AuthenticationManager.shared.currentUser()?.uid {
+                HStack(spacing: 0) {
+                    Button {
+                        store.send(.tapLikeButton)
+                    } label: {
+                        Label("좋아요  \(store.storyDetailModel.likes)", systemImage: "hand.thumbsup")
+                            .font(.footnote)
+                            .foregroundColor(.gray)
                     }
-                } else {
-                    HStack {
-                        Spacer()
-                        
-                        button(
-                            title: "🔗 공유하기",
-                            action: { isShowingActivityView = true }
+                    .frame(maxWidth: .infinity)
+                    
+                    Button {
+                        isShowingActivityView = true
+                    } label: {
+                        Label("공유하기", systemImage: "square.and.arrow.up")
+                            .font(.footnote)
+                            .foregroundColor(.gray)
+                    }
+                    .frame(maxWidth: .infinity)
+                    
+                    Button {
+                        showReportAlert.toggle()
+                    } label: {
+                        Label("신고", systemImage: "light.beacon.max.fill")
+                            .font(.footnote)
+                            .foregroundColor(.gray)
+                    }
+                    .frame(maxWidth: .infinity)
+                    .alert(isPresented: $showReportAlert) {
+                        Alert(
+                            title: Text("신고하기"),
+                            message: Text("이 스토리를 신고하시겠어요? \n신고시 이 스토리를 더 이상 볼 수 없어요."),
+                            primaryButton: .destructive(
+                                Text("신고"),
+                                action : {
+                                    store.send(.reportStory)
+                                }
+                            ),
+                            secondaryButton: .default(Text("취소"))
                         )
-                        
-                        Spacer()
                     }
                 }
-                
-                
             } else {
-                button(
-                    title: "✍🏻 커뮤니티 게시하기",
-                    action: { store.send(.tapUploadButton)}
-                )
+                HStack {
+                    Spacer()
+                    
+                    Button {
+                        isShowingActivityView = true
+                    } label: {
+                        Label("공유하기", systemImage: "square.and.arrow.up")
+                            .font(.footnote)
+                            .foregroundColor(.gray)
+                    }
+                    .frame(maxWidth: .infinity)
+                    
+                    Spacer()
+                }
             }
+        } else {
+            Button {
+                store.send(.tapUploadButton)
+            } label: {
+                Label("커뮤니티 게시하기", systemImage: "pencil.and.scribble")
+                    .font(.footnote)
+                    .foregroundColor(.gray)
+            }
+            .frame(maxWidth: .infinity)
         }
     }
     
-    private func button(title: String, action: @escaping () -> Void) -> some View {
-        Button(action: {
-            action()
-        }, label: {
-            Text(title)
-                .font(.caption)
-                .foregroundColor(.stBlack)
-        })
-        .frame(width: 105, height: 38)
-        .background(Color.stYellow)
-        .cornerRadius(8)
-    }
 }
 
 //#Preview {

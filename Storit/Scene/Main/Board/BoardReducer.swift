@@ -74,6 +74,7 @@ struct BoardReducer {
                         state.storyItems = boards
                     } else {
                         state.boardItems.append(contentsOf: IdentifiedArray(uniqueElements: boardItems))
+                        state.storyItems.append(contentsOf: boards)
                     }
                     
                     if let nextPage = result.nextPage {
@@ -94,12 +95,24 @@ struct BoardReducer {
                         $0.boardModel.createDate > $1.boardModel.createDate
                     }
                     
+                    state.storyItems.sort {
+                        $0.createDate > $1.createDate
+                    }
+                    
                 case .likes:
                     state.boardItems.sort {
                         if $0.boardModel.likes == $1.boardModel.likes {
                             $0.boardModel.createDate > $1.boardModel.createDate
                         } else {
                             $0.boardModel.likes > $1.boardModel.likes
+                        }
+                    }
+                    
+                    state.storyItems.sort {
+                        if $0.likes == $1.likes {
+                            $0.createDate > $1.createDate
+                        } else {
+                            $0.likes > $1.likes
                         }
                     }
                 }
